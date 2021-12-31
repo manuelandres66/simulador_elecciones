@@ -19,8 +19,9 @@ from votaciones import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index),
+    path('', views.index,),
     path('departamento/<str:code>', views.department),
     path('deparamento/save', views.save),
     path('partido/<str:code>', views.party),
+    path('party/votos', views.hot_map)
 ]

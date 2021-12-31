@@ -46,7 +46,6 @@ def dhondt():
 # Create your views here.
 
 def index(request):
-    print(dhondt())
     return render(request, 'index.html')
 
 def department(request, code):
@@ -83,3 +82,19 @@ def save(request):
     departmento.save()
 
     return JsonResponse({"message" : "okey"})
+
+def hot_map(request):
+    if request.method != 'POST':
+        return JsonResponse({"error" : "Invalid Method"})
+    
+    data = json.loads(request.body)
+    if 'code' not in data: 
+        return JsonResponse({"error" : "No Valid Arguments"})
+
+    partido = Partido.objects.get(code=data['code'])
+    respuesta = {}
+    for department in Departamento.objects.all():
+        votacion = Votacion.objects.get(desde=department, para=partido)
+        respuesta[department.iso] = {'votos' : votacion.votos, 'nombre' : department.nombre}
+    
+    return JsonResponse(respuesta)

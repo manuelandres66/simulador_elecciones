@@ -1,6 +1,6 @@
 let pie = am4core.create("pieChart", am4charts.PieChart);
-let partidoVotos = parseInt(document.querySelector('#partidoVotos').innerHTML);
-let totalesVotos = parseInt(document.querySelector('#totalesVotos').innerHTML);
+const partidoVotos = parseInt(document.querySelector('#partidoVotos').innerHTML);
+const totalesVotos = parseInt(document.querySelector('#totalesVotos').innerHTML);
 
 pie.data = [{
     "categoria": document.querySelector('#nombre').innerHTML,
@@ -18,3 +18,60 @@ pie.innerRadius = am4core.percent(40);
 
 
 document.querySelectorAll('.forPoints').forEach(point => point.innerHTML = point.innerHTML.replace(/\B(?=(\d{3})+(?!\d))/g, ','));
+
+
+// Heat map
+let map = am4core.create("mapChart", am4maps.MapChart);
+map.geodata = am4geodata_colombiaHigh;
+map.projection = new am4maps.projections.Mercator();
+let mapSeries = map.series.push(new am4maps.MapPolygonSeries());
+const color = document.querySelector('#partidoColor').innerHTML;
+
+mapSeries.heatRules.push({
+    property: "fill",
+    target: mapSeries.mapPolygons.template,
+    min: am4core.color(color).brighten(1),
+    max: am4core.color(color).brighten(-0.3)
+});
+mapSeries.useGeodata = true;
+
+
+fetch('/party/votos', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken' : document.querySelector('[name=csrfmiddlewaretoken]').value},
+    body : JSON.stringify({'code' : document.querySelector('#partidoCode').innerHTML})
+})
+.then(for_response => for_response.json())
+.then(response => {
+    console.log(response);
+    if (response.error !== undefined) {
+        console.error(response.error);
+        alert(response.error);
+    }
+    
+    let data = [];
+    Object.keys(response).forEach(iso => {
+        const votos = response[iso].votos;
+        const nombre = response[iso].nombre;
+        data.push({'id' : iso, 'value' : votos, 'name' : nombre})
+    });
+    
+    mapSeries.data = data;
+    
+    // Set heatmap values for each state
+
+    let polygonTemplate = mapSeries.mapPolygons.template;
+    polygonTemplate.tooltipText = "{name}: {value}";
+    polygonTemplate.nonScalingStroke = true;
+    polygonTemplate.strokeWidth = 0.5;
+    
+    let hs = polygonTemplate.states.create("hover");
+    hs.properties.fill = am4core.color(color);
+
+    polygonTemplate.events.on("hit", function(ev) {
+        ev.target.series.chart.zoomToMapObject(ev.target);
+    });
+
+
+})
+
