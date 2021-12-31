@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <title>{{ department.nombre }}</title>
+        <meta charset="utf-8">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/department.css' %}">
+        <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+        <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+        <script src="//cdn.amcharts.com/lib/4/maps.js"></script>
+        <script src="https://cdn.amcharts.com/lib/4/geodata/colombiaHigh.js"></script>
+        <style id="colorThumbs"></style>
+    </head>
+    <body>
+        <div id="container">
+            <div id="relleno"></div>
+            <div id="all">
+                <div>
+                    <h1 id='nombre'>{{ department.nombre }}</h1>
+                    <h5 id="subtitle">Elecciones Senado de la República</h5>
+                </div>
+                <div id="votantes">
+                    <div id="pieChart"></div>
+                    <div>
+                        <div id="votosConteo">
+                            <div class="addInfo">
+                                <h3>Votantes:</h3>
+                                <h2 id="votantesUsuales">{{ department.guardados}}</h2>
+                            </div>
+                            <div class="addInfo">
+                                <h4 class="category">Aptos:</h4>
+                                <h5 class="value" id="votantesAptos">{{ department.aptos}}</h5>
+                            </div>
+                            <div class="addInfo">
+                                <h4 class="category">Usuales:</h4>
+                                <h5 class="value" id="votantesUsualesUsuales">{{ department.usuales}}</h5>
+                            </div>
+                        </div>
+                        <div>
+                            <input type="range" min="10" max="{{department.aptos}}" value="{{department.usuales}}" step="1" id="rangeVotos">
+                        </div>
+                    </div>
+                </div>
+                <div id="infos">
+                    <div id="lists">
+                        <div class="column cabezera">
+                            <h3 class="categoryTitle">Partido</h3>
+                            <h3 class="categoryTitle">Votos</h3>
+                        </div>
+    
+                        {% for voto in votos %}
+                        <div id="{{ voto.para.code}}" class="column">
+                            <div>
+                                <h3 class="partidoNombre">{{ voto.para.nombre }}</h3>
+                            </div>
+                            <h3 class="numeroVotosPartido">{{ voto.votos }}</h3>
+                        </div>
+                        <input type="range" class="partidoRange" id="range{{ voto.para.code }}" min="0" step="1" 
+                        data-val="{{voto.votos}}" data-color="{{voto.para.color}}" data-nombre="{{voto.para.nombre}}">
+                        {% endfor %}
+                    </div>
+                    <div id="map">
+                        <div class="cabezera" id="cabezeraMapa">
+                            <h3 class="categoryTitle">Mapa de {{department.nombre}}</h3>
+                        </div>
+                        <div id="mapChart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="info">
+            <span id="guardados">{{ department.guardados }}</span>
+            <span id="aptos">{{ department.aptos }}</span>
+            <span id="departmentCode">{{department.iso }}</span>
+            {% csrf_token %}
+        </div>
+        <div id="saving" class='message'>Guardando...</div>
+        <div id="saved" class='message'>Guardado</div>
+        <div id="error" class='message'>Error</div>
+        <script src="{% static 'js/department.js' %}"></script>
+    </body>
+</html>

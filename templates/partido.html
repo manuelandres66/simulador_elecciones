@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+{% load static %}
+<html> 
+    <head>
+        <title>{{ partido.nombre }}</title>
+        <meta charset="utf-8">
+        <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+        <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/partido.css' %}">
+    </head>
+    <body>
+        <div id="container">
+            <div id="relleno"></div>
+            <div id="all">
+                <div>
+                    <h1 id='nombre'>{{ partido.nombre }}</h1>
+                    <h5 id="subtitle">Elecciones Senado de la República</h5>
+                </div>
+                <div id="datos">
+                    <div id="pieChart"></div>
+                    <div id="subTitles">
+                        <div id="fristSubtitles">
+                            <h6><span class="subTitle">Votos Partido: </span> <span class="forPoints">{{votos_partido.suma}}</span></h6>
+                            <h6><span class="subTitle">Votos Colombia: </span> <span class="forPoints">{{votos_totales.votos}}</span></h6>
+                        </div>
+                        <div id="secondSubtitles">
+                            <h6><span class="subTitle">Votos Minimos: </span> <span class="forPoints">{{votos_partido.minimo}}</span></h6>
+                            <h6><span class="subTitle">Votos Promedio: </span> <span class="forPoints">{{votos_partido.promedio}}</span></h6>
+                            <h6><span class="subTitle">Votos Maximos: </span> <span class="forPoints">{{votos_partido.maximo}}</span></h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <div id="info">
+            <span id="totalesVotos">{{votos_totales.votos}}</span>
+            <span id="partidoVotos">{{votos_partido.suma}}</span>
+        </div>
+        <script src="{% static 'js/partido.js' %}"></script>
+    </body>
+</html>    

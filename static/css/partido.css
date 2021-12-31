@@ -1,0 +1,80 @@
+* {
+    padding: 0;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+#container {
+    display: flex;
+}
+
+#relleno {
+    width: 20vw; 
+    height: 100vh;
+    background-color: rgb(134, 134, 134);
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+}
+
+#all {
+    padding-left: 5vw;
+    padding-right: 5vw;
+    padding-bottom: 5vh;
+    width: 80%;
+}
+
+#nombre {
+    font-family: 'Roboto', sans-serif;
+    font-size: 50px;
+    margin-top: 5vh;
+    color: #00B6FF;
+}
+
+#subtitle {
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+}
+
+#info {
+    display: none;
+}
+
+#datos {
+    display: flex;
+    margin-top: 5vh;
+}
+
+#pieChart {
+    width: 12vw;
+    height: 12vw;
+}
+
+#subTitles {
+    width: 100%;
+}
+
+#fristSubtitles, #secondSubtitles {
+    display: flex;
+    padding: 0 2.5vw;
+    margin-top: 5vh;
+    justify-content: space-between;
+    width: 90%;
+    gap: 5vw;
+}
+
+#fristSubtitles h6 {
+    font-size: 30px;
+    font-weight: 300;
+}
+
+.subTitle {
+    color: #00B6FF;
+    font-weight: 500;
+}
+
+#secondSubtitles h6 {
+    font-size: 20px;
+    font-weight: 300;
+}
