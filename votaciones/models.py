@@ -12,6 +12,7 @@ class Votacion(models.Model):
     votos = models.PositiveIntegerField()
     desde = models.ForeignKey(Departamento, related_name='votos', on_delete=models.CASCADE)
     para = models.ForeignKey('Partido', related_name='votos', on_delete=models.CASCADE)
+    usuales = models.PositiveIntegerField()
 
 class Politico(models.Model):
     nombre = models.CharField(max_length=250)

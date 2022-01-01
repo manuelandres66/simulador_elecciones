@@ -21,6 +21,7 @@ def dhondt():
 
     #Eliminado Partido que no pasan el umbral
     votos_por_partido = get_votes()
+    votos_por_partido.pop('VTB') #Voto en blanco no tiene curules
     votos_reales_partido = {} #Guardar los partidos que si pasan
     for partido in votos_por_partido:
         votos = votos_por_partido[partido]
@@ -94,9 +95,8 @@ def hot_map(request):
     partido = Partido.objects.get(code=data['code'])
     respuesta = {}
     for department in Departamento.objects.all():
-        votos_totales = Votacion.objects.filter(desde=department).aggregate(suma=Sum('votos'))
         votacion = Votacion.objects.get(desde=department, para=partido)
-        porcentaje = round((votacion.votos / votos_totales['suma']) * 100, 2)
+        porcentaje = round((votacion.votos / department.guardados) * 100, 2)
         respuesta[department.iso] = {
             'votos': votacion.votos,
             'nombre': department.nombre,

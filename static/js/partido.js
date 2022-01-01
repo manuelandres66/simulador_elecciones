@@ -31,7 +31,7 @@ mapSeries.heatRules.push({
     property: "fill",
     target: mapSeries.mapPolygons.template,
     min: am4core.color(color).brighten(1),
-    max: am4core.color(color).brighten(-0.3)
+    max: am4core.color(color).brighten(-0.3),
 });
 mapSeries.useGeodata = true;
 
@@ -55,7 +55,7 @@ fetch('/party/votos', {
         const nombre = response[iso].nombre;
         const fill = am4core.color(response[iso].fill);
         const porcentaje = response[iso].porcentaje;
-        data.push({'id' : iso, 'value' : votos, 'name' : nombre, 'fill' : fill, 'porcentaje' : porcentaje});
+        data.push({'id' : iso, 'value' : porcentaje, 'name' : nombre, 'fill' : fill, 'votos' : votos});
     });
     
     mapSeries.data = data;
@@ -63,7 +63,7 @@ fetch('/party/votos', {
     // Set heatmap values for each state
 
     let polygonTemplate = mapSeries.mapPolygons.template;
-    polygonTemplate.tooltipText = "{name}: {value} ({porcentaje}%)";
+    polygonTemplate.tooltipText = "{name}: {votos} ({value}%)";
     polygonTemplate.nonScalingStroke = true;
     polygonTemplate.strokeWidth = 0.5;
     
@@ -86,7 +86,7 @@ fetch('/party/votos', {
     secondSeries.data = data;
 
     let secondTemplate = secondSeries.mapPolygons.template;
-    secondTemplate.tooltipText = "{name}: {value} ({porcentaje}%)";
+    secondTemplate.tooltipText = "{name}: {votos} ({value}%)";
     secondTemplate.propertyFields.fill = "fill";
 
     secondTemplate.events.on("hit", function(ev) {
