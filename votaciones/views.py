@@ -86,7 +86,7 @@ def save(request):
 def hot_map(request):
     if request.method != 'POST':
         return JsonResponse({"error" : "Invalid Method"})
-    
+
     data = json.loads(request.body)
     if 'code' not in data: 
         return JsonResponse({"error" : "No Valid Arguments"})
@@ -94,7 +94,17 @@ def hot_map(request):
     partido = Partido.objects.get(code=data['code'])
     respuesta = {}
     for department in Departamento.objects.all():
+        votos_totales = Votacion.objects.filter(desde=department).aggregate(suma=Sum('votos'))
         votacion = Votacion.objects.get(desde=department, para=partido)
-        respuesta[department.iso] = {'votos' : votacion.votos, 'nombre' : department.nombre}
-    
+        porcentaje = round((votacion.votos / votos_totales['suma']) * 100, 2)
+        respuesta[department.iso] = {
+            'votos': votacion.votos,
+            'nombre': department.nombre,
+            'porcentaje' : porcentaje,
+            'fill': partido.color
+            if votacion
+            == Votacion.objects.filter(desde=department).order_by('-votos')[0]
+            else '#D3D3D3',
+        }
+
     return JsonResponse(respuesta)

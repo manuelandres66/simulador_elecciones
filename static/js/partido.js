@@ -53,7 +53,9 @@ fetch('/party/votos', {
     Object.keys(response).forEach(iso => {
         const votos = response[iso].votos;
         const nombre = response[iso].nombre;
-        data.push({'id' : iso, 'value' : votos, 'name' : nombre})
+        const fill = am4core.color(response[iso].fill);
+        const porcentaje = response[iso].porcentaje;
+        data.push({'id' : iso, 'value' : votos, 'name' : nombre, 'fill' : fill, 'porcentaje' : porcentaje});
     });
     
     mapSeries.data = data;
@@ -61,7 +63,7 @@ fetch('/party/votos', {
     // Set heatmap values for each state
 
     let polygonTemplate = mapSeries.mapPolygons.template;
-    polygonTemplate.tooltipText = "{name}: {value}";
+    polygonTemplate.tooltipText = "{name}: {value} ({porcentaje}%)";
     polygonTemplate.nonScalingStroke = true;
     polygonTemplate.strokeWidth = 0.5;
     
@@ -73,5 +75,25 @@ fetch('/party/votos', {
     });
 
 
-})
+
+    //Segundo Mapa
+
+    let mapSecond = am4core.create("mapSecond", am4maps.MapChart);
+    mapSecond.geodata = am4geodata_colombiaHigh;
+    mapSecond.projection = new am4maps.projections.Mercator();
+    let secondSeries = mapSecond.series.push(new am4maps.MapPolygonSeries());
+    secondSeries.useGeodata = true;
+    secondSeries.data = data;
+
+    let secondTemplate = secondSeries.mapPolygons.template;
+    secondTemplate.tooltipText = "{name}: {value} ({porcentaje}%)";
+    secondTemplate.propertyFields.fill = "fill";
+
+    secondTemplate.events.on("hit", function(ev) {
+        ev.target.series.chart.zoomToMapObject(ev.target);
+    });
+
+});
+
+
 
