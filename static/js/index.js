@@ -1,91 +1,45 @@
-let map = am4core.create("chartdiv", am4maps.MapChart);
-map.geodata = am4geodata_colombiaHigh;
-map.projection = new am4maps.projections.Mercator ();
-let polygonSeries = map.series.push(new am4maps.MapPolygonSeries());
-polygonSeries.useGeodata = true;
+am4core.useTheme(am4themes_animated);
 
-// Mostar Nombre Departamentos
-let polygonTemplate = polygonSeries.mapPolygons.template;
-polygonTemplate.tooltipText = "{name}";
-
-//Pintar cuando hover
-let hs = polygonTemplate.states.create("hover");
-hs.properties.fill = am4core.color("#F00");
-
-polygonTemplate.propertyFields.fill = "fill";
-
-//Eventos
-polygonTemplate.events.on("hit", function(ev) {
-    ev.target.series.chart.zoomToMapObject(ev.target);
-    let zoneCode = ev.target.dataItem.dataContext.id;
-    window.location.href = '/departamento/' + zoneCode;
-});
+var chart = am4core.create("semiCircle", am4charts.PieChart);
+chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
 
 
-/**
- * ---------------------------------------
- * This demo was created using amCharts 5.
- *
- * For more information visit:
- * https://www.amcharts.com/
- *
- * Documentation is available at:
- * https://www.amcharts.com/docs/v5/
- * ---------------------------------------
- */
+fetch('/escanos', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken' : document.querySelector('[name=csrfmiddlewaretoken]').value},
+    body : JSON.stringify({'xd' : 'xd'})
+})
+.then(r => r.json())
+.then(data => {
+    data = data.r;
+    let newData = [];
+    for (let i = 0; i < data.length; i++) {
+        if (data[i].value > 0) {
+            newData.push(data[i]);
+        }
+    };
+    chart.data = newData;
+    chart.radius = am4core.percent(80);
+    chart.innerRadius = am4core.percent(50);
+    chart.startAngle = 180;
+    chart.endAngle = 360;  
+    
 
-// Create root element
-// https://www.amcharts.com/docs/v5/getting-started/#Root_element
-var root = am5.Root.new("chartdiv");
+    let series = chart.series.push(new am4charts.PieSeries());
+    series.dataFields.value = "value";
+    series.dataFields.category = "id";
 
-// Set themes
-// https://www.amcharts.com/docs/v5/concepts/themes/
-root.setThemes([
-  am5themes_Animated.new(root)
-]);
+    series.slices.template.cornerRadius = 4;
+    series.slices.template.innerCornerRadius = 2;
+    series.slices.template.draggable = true;
+    series.slices.template.inert = true;
 
-// Create chart
-// https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/
-// start and end angle must be set both for chart and series
-var chart = root.container.children.push(am5percent.PieChart.new(root, {
-  startAngle: 180,
-  endAngle: 360,
-  layout: root.verticalLayout,
-  innerRadius: am5.percent(50)
-}));
+    series.hiddenState.properties.startAngle = 90;
+    series.hiddenState.properties.endAngle = 90;
 
-// Create series
-// https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Series
-// start and end angle must be set both for chart and series
-// var series = chart.series.push(am5percent.PieSeries.new(root, {
-//   startAngle: 180,
-//   endAngle: 360,
-//   valueField: "value",
-//   categoryField: "category",
-//   alignLabels: false
-// }));
+    chart.legend = new am4charts.Legend();
+    chart.legend.valueLabels.template.textAlign = "start";
 
-// series.states.create("hidden", {
-//   startAngle: 180,
-//   endAngle: 180
-// });
-
-// series.slices.template.setAll({
-//   cornerRadius: 5
-// });
-
-// series.ticks.template.setAll({
-//   forceHidden: true
-// });
-
-// // Set data
-// // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
-// series.data.setAll([
-//   { value: 10, category: "One" },
-//   { value: 9, category: "Two" },
-//   { value: 6, category: "Three" },
-//   { value: 5, category: "Four" },
-//   { value: 4, category: "Five" },
-//   { value: 3, category: "Six" },
-//   { value: 1, category: "Seven" }
-// ]);
+    series.slices.template.propertyFields.fill = "color";
+    series.legendSettings.labelText = "{id}";
+})

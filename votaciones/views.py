@@ -108,3 +108,16 @@ def hot_map(request):
         }
 
     return JsonResponse(respuesta)
+
+def escanos(request):
+    if request.method != 'POST':
+        return JsonResponse({"error" : "Invalid Method"})
+    # {partido.code: partidos.count(partido.code) for partido in Partido.objects.all()}
+    escanos = dhondt()
+    respuesta = []
+    for party in escanos:
+        escanos_ganados = escanos[party]
+        partido = Partido.objects.get(code=party)
+        respuesta.append({"id" : partido.nombre.title(), "value" : escanos_ganados, 'color' : partido.color})
+
+    return JsonResponse({'r' :respuesta})

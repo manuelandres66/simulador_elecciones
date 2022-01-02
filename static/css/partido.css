@@ -6,14 +6,18 @@
 
 #container {
     display: flex;
+    overflow: hidden;
+}
+
+::-webkit-scrollbar {
+    display: none;
 }
 
 #relleno {
-    width: 20vw; 
+    width: 20%; 
     height: 100vh;
     background-color: rgb(134, 134, 134);
     position: sticky;
-    position: -webkit-sticky;
     top: 0;
 }
 
