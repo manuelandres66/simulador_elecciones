@@ -58,6 +58,71 @@
     font-size: 17px;
 }
 
-#cabezeraMapa {
+#cabezeraPie {
     margin-top: 5vh;
+}
+
+#ranking {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+#cabezeraNacion, #cabezeraEscanos {
+    width: 30vw;
+    margin-top: 5vh;
+    margin-bottom: 2.5vh;
+}
+
+.partidos {
+    display: flex;
+    flex-direction: column;
+    width: calc(30vw + 2vw);
+}
+
+.partido {
+    margin-bottom: 2.5vh;
+}
+
+.nombrePartido h6 {
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.infoPartidoContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5vh;
+    width: 100%;
+}
+
+.infoPartidoContainer h6{
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.percentContainer {
+    background: #dfe1e2;
+    width: 100%;
+    height: 1vh;
+    margin-top: 1.5vh;
+    border-radius: 10px;
+    z-index: 1;
+}
+
+.percent, .realPercent {
+    height: 1vh;
+    border-radius: 10px;
+    z-index: 10;
+}
+
+#escanosNacion {
+    width: 30vw;
+}
+
+.realPercent  {
+    background-color: #000;
+    opacity: 0.3;
+    position: relative;
+    bottom: 1vh;
 }

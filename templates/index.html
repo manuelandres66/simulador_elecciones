@@ -19,15 +19,59 @@
                     <h5 id="subtitle">Elecciones Senado de la República</h5>
                 </div>
                 <div>
-                    <div class="cabezera" id="cabezeraMapa">
+                    <div class="cabezera" id="cabezeraPie">
                         <h3 class="categoryTitle">Conformacion del senado. Escaños por partidos</h3>
                     </div>
                     <div id="semiCircle"></div>
+                </div>
+                <div id="ranking">
+                    <div id="votosNacion">
+                        <div class="cabezera" id="cabezeraNacion">
+                            <h3 class="categoryTitle">Votos a nivel nacional</h3>
+                        </div>
+                        <div class="partidos">
+                            {% for partido in partidos %}
+                            <div class="partido" id="{{partido.code}}">
+                                <div class="nombrePartido">
+                                    <h6>{{partido.nombre}}</h6>
+                                </div>
+                                <div class="infoPartidoContainer">
+                                    <h6 class="votosPartido"></h6>
+                                    <h6 class="porcentajePartido"></h6>
+                                </div>
+                                <div class="percentContainer"><div class="percent" data-color="{{partido.color}}"></div></div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div id="escanosNacion">
+                        <div class="cabezera" id="cabezeraEscanos">
+                            <h3 class="categoryTitle">Escaños ganados por partido</h3>
+                        </div>
+                        <div class="partidos">
+                            {% for partido in partidos %}
+                            <div class="partido" id="{{partido.code}}Escanos">
+                                <div class="nombrePartido">
+                                    <h6>{{partido.nombre}}</h6>
+                                </div>
+                                <div class="infoPartidoContainer">
+                                    <h6 class="escanosPartido"></h6>
+                                    <h6 class="escanosPorcentajePartido"></h6>
+                                </div>
+                                <div class="percentContainer">
+                                    <div class="percent" data-color="{{partido.color}}"></div>
+                                    <div class="realPercent"></div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div id="info">
             {% csrf_token %}
+            <span id="votosTotales">{{votos_totales}}</span>
         </div>
         <script src="{% static 'js/index.js' %}"></script>
     </body>

@@ -24,5 +24,6 @@ urlpatterns = [
     path('deparamento/save', views.save),
     path('partido/<str:code>', views.party),
     path('party/votos', views.hot_map),
-    path('escanos', views.escanos),
+    path('post/escanos', views.escanos),
+    path('post/votos', views.votos_partidos)
 ]

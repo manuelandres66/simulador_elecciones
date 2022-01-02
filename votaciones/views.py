@@ -47,7 +47,9 @@ def dhondt():
 # Create your views here.
 
 def index(request):
-    return render(request, 'index.html')
+    partidos = Partido.objects.all()
+    votos_totales = Votacion.objects.aggregate(votos=Sum('votos'))
+    return render(request, 'index.html', {'partidos' : partidos, 'votos_totales' : votos_totales['votos']})
 
 def department(request, code):
     department = Departamento.objects.get(iso=code)
@@ -118,6 +120,16 @@ def escanos(request):
     for party in escanos:
         escanos_ganados = escanos[party]
         partido = Partido.objects.get(code=party)
-        respuesta.append({"id" : partido.nombre.title(), "value" : escanos_ganados, 'color' : partido.color})
+        respuesta.append({"id" : partido.nombre.title(), "value" : escanos_ganados, 'color' : partido.color, 'code' : party})
 
+    respuesta.sort(key=lambda x: x['value'], reverse=True)
     return JsonResponse({'r' :respuesta})
+
+
+def votos_partidos(request):
+    if request.method != 'POST':
+        return JsonResponse({"error" : "Invalid Method"})
+
+    votos = get_votes()
+    votos = dict(sorted(votos.items(), key=lambda item: item[1]))
+    return JsonResponse({'r' :votos})
